@@ -1,0 +1,30 @@
+name: Reusable workflow Actions java 17
+
+on:
+  workflow_call:
+
+jobs:
+  build: 
+    name: build Aplicacao Java
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - uses: actions/checkout@v3
+      with:
+        maven-args: "clean install test"
+
+    - run: mvn --batch-mode --update-snapshots verify
+    - run: mkdir java && cp target/*.jar java
+    - uses: actions/upload-artifact@v3
+      with:
+       name: Package
+       path: java 
+  
